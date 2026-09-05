@@ -14,7 +14,278 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          created_at: string
+          description: string
+          document_id: string | null
+          event_type: string
+          id: string
+          patient_id: string | null
+          record_id: string | null
+          source_type: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          document_id?: string | null
+          event_type: string
+          id?: string
+          patient_id?: string | null
+          record_id?: string | null
+          source_type?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          document_id?: string | null
+          event_type?: string
+          id?: string
+          patient_id?: string | null
+          record_id?: string | null
+          source_type?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_logs_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_logs_record_id_fkey"
+            columns: ["record_id"]
+            isOneToOne: false
+            referencedRelation: "extracted_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string
+          document_date: string | null
+          document_type: string | null
+          file_name: string
+          file_path: string | null
+          file_size: number | null
+          file_type: string
+          id: string
+          patient_id: string
+          processing_error: string | null
+          processing_status: string
+          provider: string | null
+          updated_at: string
+          user_id: string
+          verification_status: string
+        }
+        Insert: {
+          created_at?: string
+          document_date?: string | null
+          document_type?: string | null
+          file_name: string
+          file_path?: string | null
+          file_size?: number | null
+          file_type: string
+          id?: string
+          patient_id: string
+          processing_error?: string | null
+          processing_status?: string
+          provider?: string | null
+          updated_at?: string
+          user_id: string
+          verification_status?: string
+        }
+        Update: {
+          created_at?: string
+          document_date?: string | null
+          document_type?: string | null
+          file_name?: string
+          file_path?: string | null
+          file_size?: number | null
+          file_type?: string
+          id?: string
+          patient_id?: string
+          processing_error?: string | null
+          processing_status?: string
+          provider?: string | null
+          updated_at?: string
+          user_id?: string
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      extracted_records: {
+        Row: {
+          created_at: string
+          document_id: string
+          id: string
+          label: string
+          original_value: string | null
+          record_type: string
+          source_page: number | null
+          source_type: string
+          unit: string | null
+          updated_at: string
+          user_id: string
+          value: string
+          verification_status: string
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          id?: string
+          label: string
+          original_value?: string | null
+          record_type: string
+          source_page?: number | null
+          source_type?: string
+          unit?: string | null
+          updated_at?: string
+          user_id: string
+          value: string
+          verification_status?: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          id?: string
+          label?: string
+          original_value?: string | null
+          record_type?: string
+          source_page?: number | null
+          source_type?: string
+          unit?: string | null
+          updated_at?: string
+          user_id?: string
+          value?: string
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extracted_records_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medications: {
+        Row: {
+          created_at: string
+          document_id: string | null
+          end_date: string | null
+          frequency: string | null
+          id: string
+          name: string
+          patient_id: string
+          source_type: string
+          start_date: string | null
+          strength: string | null
+          updated_at: string
+          user_id: string
+          verification_status: string
+        }
+        Insert: {
+          created_at?: string
+          document_id?: string | null
+          end_date?: string | null
+          frequency?: string | null
+          id?: string
+          name: string
+          patient_id: string
+          source_type?: string
+          start_date?: string | null
+          strength?: string | null
+          updated_at?: string
+          user_id: string
+          verification_status?: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string | null
+          end_date?: string | null
+          frequency?: string | null
+          id?: string
+          name?: string
+          patient_id?: string
+          source_type?: string
+          start_date?: string | null
+          strength?: string | null
+          updated_at?: string
+          user_id?: string
+          verification_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medications_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medications_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          contact_information: string | null
+          created_at: string
+          date_of_birth: string | null
+          gender: string | null
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          contact_information?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          gender?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          contact_information?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          gender?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

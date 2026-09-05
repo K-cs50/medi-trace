@@ -44,17 +44,19 @@ export const extractMedicalDocument = createServerFn({ method: "POST" })
     if (!apiKey) throw new Error("Lovable AI is not configured for this workspace.");
 
     const gateway = createLovableAiGatewayProvider(apiKey);
+    const documentPart = data.mimeType === "application/pdf"
+      ? { type: "file" as const, data: data.dataUrl, mediaType: data.mimeType, filename: data.fileName }
+      : { type: "image" as const, image: data.dataUrl, mediaType: data.mimeType };
+
     const result = await generateText({
       model: gateway("google/gemini-3.7-flash"),
       output: Output.object({ schema: extractedSchema }),
       prompt: `You are MedLens, a medical information extraction assistant. Analyze the attached document ${data.fileName}. Return only information explicitly visible in the source. Never diagnose, prescribe, infer missing dates, invent values, or add reference ranges. If absent, use null or an empty array. Page numbers must be included only when visible or reliably available. Keep the output concise.`,
       messages: [{
-        role: "user",
+        role: "user" as const,
         content: [
           { type: "text", text: "Extract the requested structured medical information from this source document." },
-          data.mimeType === "application/pdf"
-            ? { type: "file", data: data.dataUrl, mediaType: data.mimeType, filename: data.fileName }
-            : { type: "image", image: data.dataUrl, mediaType: data.mimeType },
+          documentPart,
         ],
       }],
     });
